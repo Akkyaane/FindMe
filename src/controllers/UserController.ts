@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import { User } from "../entities/User";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
 import { validate } from "class-validator";
+
+const jwt = require("jsonwebtoken");
+const Cookies = require("cookies");
 
 export class UserController {
   static async create(req: Request, res: Response) {
@@ -36,7 +38,7 @@ export class UserController {
     } catch (error) {
       return res.status(500).json({
         message: "Erreur lors de la création de l'utilisateur",
-        error: error
+        error: error,
       });
     }
   }
@@ -51,7 +53,26 @@ export class UserController {
         return res.status(401).json({ message: "Identifiants invalides" });
       }
 
-      return res.status(200).json(user);
+      const token = jwt.sign(
+        { data: user.id },
+        process.env.JWT_SECRET || "secret",
+        {
+          expiresIn: "1d",
+        },
+      );
+
+      const cookies = new Cookies(req, res);
+      
+      cookies.set("JWT Token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      });
+
+      return res.status(200).json({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      });
     } catch (error) {
       const details = error instanceof Error ? error.message : String(error);
 

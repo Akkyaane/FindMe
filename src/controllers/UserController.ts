@@ -51,7 +51,14 @@ export class UserController {
         return res.status(401).json({ message: "Identifiants invalides" });
       }
 
-      return res.status(200).json(user);
+      const isValid = await bcrypt.compare(password, user.password);
+
+      if (!isValid) {
+        return res.status(401).json({ message: "Identifiants invalides" });
+      }
+
+      const { password: _, ...userWithoutPassword } = user;
+return res.status(200).json(userWithoutPassword);
     } catch (error) {
       const details = error instanceof Error ? error.message : String(error);
 

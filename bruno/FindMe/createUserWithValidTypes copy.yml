@@ -1,18 +1,18 @@
 info:
-  name: createQuestion
+  name: createUserWithValidTypes copy
   type: http
-  seq: 3
+  seq: 2
 
 http:
   method: POST
-  url: http://localhost:3000/questions
+  url: http://localhost:3000/users
   body:
     type: json
     data: |-
       {
-        "content": "Quelle est la capitale de la France ?",
-        "image": null,
-        "createdBy": 1
+        "username": "johndoe",
+        "email": "john.doe@gmail.com",
+        "password": "vY*fx6^vU46rXRh8"
       }
   auth: inherit
 

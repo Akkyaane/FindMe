@@ -1,0 +1,55 @@
+info:
+  name: createUserWithInvalidTypes
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/users
+  body:
+    type: json
+    data: |-
+      {
+        "username": 1,
+        "email": "john.doe",
+        "password": "toto"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("shouldBeError400", function () {
+          expect(res.status).to.equal(400);
+        });
+
+        test("ShouldContainValidationFailedError", function () {
+          expect(res.body.message).to.equal("Validation failed");
+        });
+
+        test("ShouldInvalidateUsernameType", function () {
+          const usernameError = res.body.errors.find(
+            (err) => err.property === "username"
+          );
+
+          expect(usernameError.constraints.isString).to.equal(
+            "username must be a string"
+          );
+        });
+
+        test("ShouldInvalidateEmailType", function () {
+          const emailError = res.body.errors.find(
+            (err) => err.property === "email"
+          );
+
+          expect(emailError.constraints.isEmail).to.equal(
+            "email must be an email"
+          );
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

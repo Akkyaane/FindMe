@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, JoinColumn } from "typeorm";
 import { User } from "./User";
+import { IsString } from "class-validator";
 
 @Entity()
 export class Question extends BaseEntity {
@@ -7,6 +8,7 @@ export class Question extends BaseEntity {
   id!: number;
 
   @Column()
+  @IsString()
   content!: string;
 
   @Column({ nullable: true })

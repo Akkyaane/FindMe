@@ -1,11 +1,11 @@
 info:
-  name: createUser
+  name: loginUser
   type: http
-  seq: 1
+  seq: 5
 
 http:
   method: POST
-  url: http://localhost:3000/users
+  url: http://localhost:3000/users/login
   body:
     type: json
     data: |-
@@ -19,20 +19,16 @@ runtime:
   scripts:
     - type: tests
       code: |-
-        test("Status 201", function() {
-            expect(res.status).to.equal(201);
+        test("Status 200", function() {
+          expect(res.status).to.equal(200);
         });
 
-        test("Réponse contient name", function() {
-          expect(res.body.name).to.exist;
+        test("Réponse contient id", function() {
+          expect(res.body.id).to.exist;
         });
 
         test("Réponse contient email", function() {
           expect(res.body.email).to.exist;
-        });
-
-        test("Réponse contient password (hashé)", function() {
-          expect(res.body.password).to.exist;
         });
 
 settings:

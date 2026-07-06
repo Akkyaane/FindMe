@@ -6,9 +6,7 @@ import crypto from "crypto";
 export class UserController {
   static async create(req: Request, res: Response) {
     try {
-      const password = crypto.randomBytes(12).toString("base64");
-      const hashedPassword = await bcrypt.hash(password, 10);
-
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
       req.body.password = hashedPassword;
 
       const user = User.create(req.body);
@@ -24,4 +22,22 @@ export class UserController {
       });
     }
   }
+  static async login(req: Request, res: Response) {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(401).json({ message: "Identifiants invalides" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    return res.status(200).json(user);
+  } catch (error) {
+    const details = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({ message: "Erreur lors de l'identification", error: details });
+  }
+}
 }

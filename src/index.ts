@@ -1,21 +1,23 @@
 import express from "express";
+import routes from "./routes";
 import { AppDataSource } from "./datasource";
-import { UserController } from "./controllers/UserController";
 
 const app = express();
-const PORT = 3000;
 
+const port = 3000;
+
+// Configuration du middleware pour parser le corps des requêtes en JSON
 app.use(express.json());
 
-// 👉 route POST /users
-app.post("/users", UserController.create);
+app.use(routes);
 
 AppDataSource.initialize()
   .then(() => {
-    console.log("DB connected");
-
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+    console.log("Database initialized");
+    app.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}`);
     });
   })
-  .catch((err) => console.error(err));
+  .catch((error) => {
+    console.error("Database initialization failed", error);
+  });

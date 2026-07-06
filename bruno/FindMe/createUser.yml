@@ -10,9 +10,29 @@ http:
     type: json
     data: |-
       {
-        "email": "john.doe@gmail.com"
+        "email": "leanne@example.com"
       }
   auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 201", function() {
+            expect(res.status).to.equal(201);
+        });
+
+        test("Réponse contient name", function() {
+          expect(res.body.name).to.exist;
+        });
+
+        test("Réponse contient email", function() {
+          expect(res.body.email).to.exist;
+        });
+
+        test("Réponse contient password (hashé)", function() {
+          expect(res.body.password).to.exist;
+        });
 
 settings:
   encodeUrl: true

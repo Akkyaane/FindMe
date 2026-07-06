@@ -6,6 +6,7 @@ import crypto from "crypto";
 export class UserController {
   static async create(req: Request, res: Response) {
     try {
+      const { name, email } = req.body;
       const password = crypto.randomBytes(12).toString("base64");
       const hashedPassword = await bcrypt.hash(password, 10);
 

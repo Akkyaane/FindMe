@@ -53,6 +53,12 @@ export class UserController {
         return res.status(401).json({ message: "Identifiants invalides" });
       }
 
+      const isValid = await bcrypt.compare(password, user.password);
+
+      if (!isValid) {
+        return res.status(401).json({ message: "Identifiants invalides" });
+      }
+
       const token = jwt.sign(
         { data: user.id },
         process.env.JWT_SECRET || "secret",

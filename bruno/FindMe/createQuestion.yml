@@ -7,13 +7,19 @@ http:
   method: POST
   url: http://localhost:3000/questions
   body:
-    type: json
-    data: |-
-      {
-        "content": "Quelle est la capitale de la France ?",
-        "image": null,
-        "createdBy": 1
-      }
+    type: multipart-form
+    data:
+      - name: content
+        type: text
+        value: Quelle est la capitale de la France ?
+      - name: createdBy
+        type: text
+        value: "1"
+      - name: image
+        type: file
+        value:
+          - C:\Users\lfnox\OneDrive\Images\tout\baba.jpg
+        contentType: image/jpeg
   auth: inherit
 
 runtime:
@@ -30,6 +36,10 @@ runtime:
 
         test("Réponse contient content", function() {
           expect(res.body.content).to.exist;
+        });
+
+        test("Réponse contient media", function() {
+          expect(res.body.media).to.exist;
         });
 
 settings:

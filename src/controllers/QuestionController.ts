@@ -1,13 +1,17 @@
 import { Request, Response } from "express";
 import Question from "../entities/Question";
 import User from "../entities/User";
+import { Media } from "../entities/Media";
 
 //Ajouter validate de classe-validator pour valider les données de la question
 
 export default class QuestionController {
   public async create(req: Request, res: Response) {
     try {
-      const { content, image, createdBy } = req.body;
+      if (!req.body) {
+        return res.status(400).json({ message: "Corps de la requête manquant. Utilisez multipart/form-data." });
+      }
+      const { content, createdBy } = req.body;
       const user = await User.findOneBy({ id: createdBy });
 
       if (!user) {
@@ -16,10 +20,26 @@ export default class QuestionController {
 
       const newQuestion = Question.create({
         content: content,
-        image,
         createdBy: user,
       });
-      const result = await Question.save(newQuestion);
+      const savedQuestion = await Question.save(newQuestion);
+
+      if (req.file) {
+        const media = Media.create({
+          filename: req.file.filename,
+          originalName: req.file.originalname,
+          path: req.file.path,
+          mimetype: req.file.mimetype,
+          size: req.file.size,
+          question: savedQuestion,
+        });
+        await Media.save(media);
+      }
+
+      const result = await Question.findOne({
+        where: { id: savedQuestion.id },
+        relations: { createdBy: true, media: true },
+      });
 
       return res.status(201).json(result);
     } catch (error) {

@@ -4,6 +4,7 @@ import {
   Column,
   BaseEntity,
   ManyToOne,
+  OneToOne,
   JoinColumn,
 } from "typeorm";
 import User from "./User";
@@ -17,6 +18,7 @@ import {
   IsJSON,
 } from "class-validator";
 import Questionnaire from "./Questionnaire";
+import { Media } from "./Media";
 
 @Entity()
 export default class Question extends BaseEntity {
@@ -38,11 +40,15 @@ export default class Question extends BaseEntity {
   // @ArrayMinSize(4)
   response!: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsJSON()
+  @IsMimeType()
   image!: string;
 
   @ManyToOne(() => Questionnaire)
   @JoinColumn({ name: "questionnaire" })
   questionnaire!: Questionnaire;
+
+  @OneToOne(() => Media, (media) => media.question, { nullable: true, eager: true })
+  media!: Media | null;
 }

@@ -8,6 +8,7 @@ const port = 3000;
 
 // Configuration du middleware pour parser le corps des requêtes en JSON
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 app.use(routes);
 

@@ -31,9 +31,9 @@ export default class QuestionController {
           path: req.file.path,
           mimetype: req.file.mimetype,
           size: req.file.size,
-          question: savedQuestion,
         });
-        await Media.save(media);
+        savedQuestion.media = media;
+        await Question.save(savedQuestion);
       }
 
       const result = await Question.findOne({

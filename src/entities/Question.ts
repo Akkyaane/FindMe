@@ -49,6 +49,7 @@ export default class Question extends BaseEntity {
   @JoinColumn({ name: "questionnaire" })
   questionnaire!: Questionnaire;
 
-  @OneToOne(() => Media, (media) => media.question, { nullable: true, eager: true })
+  @OneToOne(() => Media, (media) => media.question, { nullable: true, eager: true, cascade: true })
+  @JoinColumn({ name: "mediaId" })
   media!: Media | null;
 }

@@ -31,8 +31,7 @@ export class Media extends BaseEntity {
   @Column()
   size!: number;
 
-  @OneToOne(() => Question, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "questionId" })
+  @OneToOne(() => Question, (question) => question.media)
   question!: Question;
 
   @AfterRemove()

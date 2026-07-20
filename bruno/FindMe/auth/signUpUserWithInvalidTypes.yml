@@ -1,5 +1,5 @@
 info:
-  name: createUserWithInvalidTypes
+  name: signUpUserWithInvalidTypes
   type: http
   seq: 1
 

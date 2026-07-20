@@ -1,7 +1,7 @@
 info:
-  name: createUserWithValidTypes copy
+  name: signUpWithValidTypes
   type: http
-  seq: 2
+  seq: 1
 
 http:
   method: POST
@@ -12,7 +12,7 @@ http:
       {
         "username": "loulou",
         "email": "louloulou.doe@gmail.com",
-        "password": "loulou"
+        "password": "$t#3q15LelurA2aP"
       }
   auth: inherit
 

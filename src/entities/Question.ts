@@ -14,6 +14,7 @@ import {
   MinLength,
   ArrayMinSize,
   IsMimeType,
+  IsJSON,
 } from "class-validator";
 import Questionnaire from "./Questionnaire";
 
@@ -33,11 +34,12 @@ export default class Question extends BaseEntity {
   content!: string;
 
   @Column({ nullable: true })
-  @ArrayMinSize(4)
+  // @IsArray()
+  // @ArrayMinSize(4)
   response!: string;
 
-  @Column({ nullable: true })
-  @IsMimeType()
+  @Column()
+  @IsJSON()
   image!: string;
 
   @ManyToOne(() => Questionnaire)

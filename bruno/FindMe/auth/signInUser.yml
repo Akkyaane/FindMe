@@ -1,17 +1,17 @@
 info:
-  name: loginUser
+  name: signInUser
   type: http
-  seq: 4
+  seq: 1
 
 http:
   method: POST
-  url: http://localhost:3000/users/login
+  url: http://localhost:3000/users/signIn
   body:
     type: json
     data: |-
       {
         "email": "louloulou.doe@gmail.com",
-        "password": "loulou"
+        "password": "$t#3q15LelurA2aP"
       }
   auth: inherit
 

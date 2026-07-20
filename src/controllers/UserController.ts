@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import Cookies from "cookies";
 
 export default class UserController {
-  public async create(req: Request, res: Response) {
+  public async signUp(req: Request, res: Response) {
     try {
       const user = new User();
       user.username = req.body.username;
@@ -24,7 +24,7 @@ export default class UserController {
       }
 
       const existingUser = await User.findOne({ where: { email: user.email } });
-      
+
       if (existingUser) {
         return res.status(409).json({
           message: "Un utilisateur avec cet email existe deja.",
@@ -44,7 +44,7 @@ export default class UserController {
     }
   }
 
-  public async login(req: Request, res: Response) {
+  public async signIn(req: Request, res: Response) {
     try {
       if (!req.body.email || !req.body.password) {
         return res
@@ -98,6 +98,18 @@ export default class UserController {
       return res
         .status(500)
         .json({ message: "Erreur lors de l'identification", error: error });
+    }
+  }
+
+  public async signOut(req: Request, res: Response) {
+    try {
+      const cookies = new Cookies(req, res);
+
+      cookies.set("JWT Token", "", { maxAge: 0 });
+
+      return res.status(200).json({ message: "Utilisateur déconnecté" });
+    } catch (error) {
+      return res.status(500).json({ message: "Erreur lors de la déconnexion", error: error });
     }
   }
 }

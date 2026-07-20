@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import Question from "../entities/Question";
 import User from "../entities/User";
 
+//Ajouter validate de classe-validator pour valider les données de la question
+
 export default class QuestionController {
   public async create(req: Request, res: Response) {
     try {

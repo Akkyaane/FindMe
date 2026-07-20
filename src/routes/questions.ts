@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { QuestionController } from "../controllers/QuestionController";
+import QuestionController from "../controllers/QuestionController";
 
 const router = Router();
+const questionController = new QuestionController();
 
-router.post("/", QuestionController.create);
+router.post("/", questionController.create);
 
 export default router;

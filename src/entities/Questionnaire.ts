@@ -8,12 +8,12 @@ import {
   OneToMany,
   JoinColumn,
 } from "typeorm";
-import { IsString } from "class-validator";
-import { User } from "./User";
-import { Question } from "./Question";
+import { IsDate, IsString } from "class-validator";
+import User from "./User";
+import Question from "./Question";
 
 @Entity()
-export class Questionnaire extends BaseEntity {
+export default class Questionnaire extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -22,6 +22,7 @@ export class Questionnaire extends BaseEntity {
   title!: string;
 
   @CreateDateColumn()
+  @IsDate()
   createdAt!: Date;
 
   @ManyToOne(() => User)

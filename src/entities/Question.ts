@@ -1,16 +1,26 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, JoinColumn } from "typeorm";
-import { User } from "./User";
-import { IsString } from "class-validator";
-import { Questionnaire } from "./Questionnaire";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  ManyToOne,
+  JoinColumn,
+} from "typeorm";
+import User from "./User";
+import {
+  IsArray,
+  IsString,
+  MaxLength,
+  MinLength,
+  ArrayMinSize,
+  IsMimeType,
+} from "class-validator";
+import Questionnaire from "./Questionnaire";
 
 @Entity()
-export class Question extends BaseEntity {
+export default class Question extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
-
-  @ManyToOne(() => Questionnaire, (questionnaire) => questionnaire.questions)
-  @JoinColumn({ name: "questionnaireId" })
-  questionnaire!: Questionnaire;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "createdBy" })
@@ -18,11 +28,19 @@ export class Question extends BaseEntity {
 
   @Column()
   @IsString()
+  @MinLength(4)
+  @MaxLength(200)
   content!: string;
 
   @Column({ nullable: true })
+  @ArrayMinSize(4)
   response!: string;
 
   @Column({ nullable: true })
+  @IsMimeType()
   image!: string;
+
+  @ManyToOne(() => Questionnaire)
+  @JoinColumn({ name: "questionnaire" })
+  questionnaire!: Questionnaire;
 }

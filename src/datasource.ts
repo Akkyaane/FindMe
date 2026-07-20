@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { User } from "./entities/User";
-import { Question } from "./entities/Question";
-import { Questionnaire } from "./entities/Questionnaire";
+import User from "./entities/User";
+import Question from "./entities/Question";
+import Questionnaire from "./entities/Questionnaire";
 
 export const AppDataSource = new DataSource({
   type: "better-sqlite3",

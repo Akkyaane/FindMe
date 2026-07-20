@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { Question } from "../entities/Question";
-import { User } from "../entities/User";
+import Question from "../entities/Question";
+import User from "../entities/User";
 
-export class QuestionController {
-  static async create(req: Request, res: Response) {
+export default class QuestionController {
+  public async create(req: Request, res: Response) {
     try {
       const { content, image, createdBy } = req.body;
       const user = await User.findOneBy({ id: createdBy });
@@ -12,7 +12,11 @@ export class QuestionController {
         return res.status(404).json({ message: "Utilisateur introuvable" });
       }
 
-      const newQuestion = Question.create({ content: content, image, createdBy: user });
+      const newQuestion = Question.create({
+        content: content,
+        image,
+        createdBy: user,
+      });
       const result = await Question.save(newQuestion);
 
       return res.status(201).json(result);
@@ -24,5 +28,4 @@ export class QuestionController {
       });
     }
   }
-
 }

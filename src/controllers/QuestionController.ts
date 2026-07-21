@@ -12,6 +12,32 @@ export default class QuestionController {
         return res.status(400).json({ message: "Corps de la requête manquant. Utilisez multipart/form-data." });
       }
       const { content, createdBy } = req.body;
+
+      if (!req.body.response) {
+        return res.status(400).json({ message: "La zone de réponse (response) est obligatoire" });
+      }
+
+      let polygon: { x: number; y: number }[];
+      try {
+        const raw = typeof req.body.response === "string"
+          ? req.body.response.replace(/\\"/g, '"')
+          : req.body.response;
+        polygon = typeof raw === "string" ? JSON.parse(raw) : raw;
+      } catch {
+        return res.status(400).json({ message: "Format de response invalide, JSON attendu" });
+      }
+
+      if (!Array.isArray(polygon) || polygon.length < 3) {
+        return res.status(400).json({ message: "La zone de réponse doit contenir au moins 3 coordonnées pour former un polygone" });
+      }
+
+      const allValid = polygon.every(
+        (p) => typeof p.x === "number" && typeof p.y === "number"
+      );
+      if (!allValid) {
+        return res.status(400).json({ message: "Chaque coordonnée doit avoir des propriétés x et y numériques" });
+      }
+
       const user = await User.findOneBy({ id: createdBy });
 
       if (!user) {
@@ -20,6 +46,7 @@ export default class QuestionController {
 
       const newQuestion = Question.create({
         content: content,
+        response: polygon,
         createdBy: user,
       });
       const savedQuestion = await Question.save(newQuestion);

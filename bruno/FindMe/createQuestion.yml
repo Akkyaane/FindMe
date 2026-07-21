@@ -20,6 +20,9 @@ http:
         value:
           - C:\Users\lfnox\OneDrive\Images\tout\baba.jpg
         contentType: image/jpeg
+      - name: response
+        type: text
+        value: '[{\"x\":0.1,\"y\":0.2},{\"x\":0.5,\"y\":0.1},{\"x\":0.3,\"y\":0.8}]'
   auth: inherit
 
 runtime:

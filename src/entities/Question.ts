@@ -9,13 +9,9 @@ import {
 } from "typeorm";
 import User from "./User";
 import {
-  IsArray,
   IsString,
   MaxLength,
   MinLength,
-  ArrayMinSize,
-  IsMimeType,
-  IsJSON,
 } from "class-validator";
 import Questionnaire from "./Questionnaire";
 import { Media } from "./Media";
@@ -35,14 +31,10 @@ export default class Question extends BaseEntity {
   @MaxLength(200)
   content!: string;
 
-  @Column({ nullable: true })
-  // @IsArray()
-  // @ArrayMinSize(4)
-  response!: string;
+  @Column({ type: "simple-json", nullable: true })
+  response!: { x: number; y: number }[] | null;
 
   @Column({ nullable: true })
-  @IsJSON()
-  @IsMimeType()
   image!: string;
 
   @ManyToOne(() => Questionnaire)

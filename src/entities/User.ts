@@ -22,7 +22,7 @@ export default class User extends BaseEntity {
   @IsEmail()
   email!: string;
 
-  @Column()
+  @Column({ select: false })
   @IsStrongPassword()
   password!: string;
 }

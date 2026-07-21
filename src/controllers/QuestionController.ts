@@ -50,4 +50,36 @@ export default class QuestionController {
       });
     }
   }
+
+  public async delete(req: Request, res: Response) {
+    try {
+      const id = parseInt(req.params.id as string);
+      const question = await Question.findOne({
+        where: { id },
+        relations: { media: true },
+      });
+
+      if (!question) {
+        return res.status(404).json({ message: "Question introuvable" });
+      }
+
+      const media = question.media;
+
+      // Supprime la question (la FK mediaId est sur la table question)
+      await Question.delete(id);
+
+      // Supprime le média de la BDD → déclenche @AfterRemove qui supprime le fichier
+      if (media) {
+        await media.remove();
+      }
+
+      return res.status(200).json({ message: "Question supprimée avec succès" });
+    } catch (error) {
+      const details = error instanceof Error ? error.message : String(error);
+      return res.status(500).json({
+        message: "Erreur lors de la suppression de la question",
+        error: details,
+      });
+    }
+  }
 }

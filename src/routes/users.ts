@@ -7,5 +7,6 @@ const userController = new UserController();
 router.post("/signup", userController.signUp);
 router.post("/signin", userController.signIn);
 router.post("/signout", userController.signOut);
+router.delete("/:id", userController.delete);
 
 export default router;

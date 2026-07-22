@@ -62,3 +62,34 @@ export const resizeImage = async (
     next(error);
   }
 };
+
+export const resizeImages = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
+    next();
+    return;
+  }
+
+  try {
+    for (const file of req.files as Express.Multer.File[]) {
+      const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.webp`;
+      const filepath = path.join(UPLOAD_DIR, filename);
+
+      await sharp(file.buffer)
+        .resize({ width: 800, withoutEnlargement: true })
+        .webp({ quality: 80 })
+        .toFile(filepath);
+
+      file.filename = filename;
+      file.path = path.join("uploads", filename);
+      file.mimetype = "image/webp";
+      file.size = fs.statSync(filepath).size;
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+};

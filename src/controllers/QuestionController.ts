@@ -11,6 +11,11 @@ export default class QuestionController {
       if (!req.body) {
         return res.status(400).json({ message: "Corps de la requête manquant. Utilisez multipart/form-data." });
       }
+
+      if (!req.file) {
+        return res.status(400).json({ message: "Une image est obligatoire" });
+      }
+
       const { content, createdBy } = req.body;
 
       if (!req.body.response) {
@@ -51,17 +56,15 @@ export default class QuestionController {
       });
       const savedQuestion = await Question.save(newQuestion);
 
-      if (req.file) {
-        const media = Media.create({
-          filename: req.file.filename,
-          originalName: req.file.originalname,
-          path: req.file.path,
-          mimetype: req.file.mimetype,
-          size: req.file.size,
-        });
-        savedQuestion.media = media;
-        await Question.save(savedQuestion);
-      }
+      const media = Media.create({
+        filename: req.file.filename,
+        originalName: req.file.originalname,
+        path: req.file.path,
+        mimetype: req.file.mimetype,
+        size: req.file.size,
+      });
+      savedQuestion.media = media;
+      await Question.save(savedQuestion);
 
       const result = await Question.findOne({
         where: { id: savedQuestion.id },

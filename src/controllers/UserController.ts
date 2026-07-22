@@ -52,7 +52,10 @@ export default class UserController {
           .json({ message: "Email et mot de passe requis" });
       }
 
-      const user = await User.findOne({ where: { email: req.body.email } });
+      const user = await User.createQueryBuilder("user")
+        .addSelect("user.password")
+        .where("user.email = :email", { email: req.body.email })
+        .getOne();
 
       if (!user) {
         return res.status(401).json({ message: "Identifiants invalides" });
@@ -88,7 +91,7 @@ export default class UserController {
 
         return res
           .status(200)
-          .json({ user: decoded, message: "Utilisateur connecté" });
+          .json({ user, message: "Utilisateur connecté" });
       } else {
         return res
           .status(200)
@@ -110,6 +113,23 @@ export default class UserController {
       return res.status(200).json({ message: "Utilisateur déconnecté" });
     } catch (error) {
       return res.status(500).json({ message: "Erreur lors de la déconnexion", error: error });
+    }
+  }
+
+  public async delete(req: Request, res: Response) {
+    try {
+      const id = parseInt(req.params.id as string);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "ID invalide" });
+      }
+      const user = await User.findOneBy({ id });
+      if (!user) {
+        return res.status(404).json({ message: "Utilisateur introuvable" });
+      }
+      await User.delete(id);
+      return res.status(200).json({ message: "Utilisateur supprimé avec succès" });
+    } catch (error) {
+      return res.status(500).json({ message: "Erreur lors de la suppression de l'utilisateur", error: error });
     }
   }
 }

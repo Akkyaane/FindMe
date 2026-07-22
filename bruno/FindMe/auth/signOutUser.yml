@@ -6,6 +6,8 @@ info:
 http:
   method: POST
   url: http://localhost:3000/users/signout
+  body:
+    type: none
   auth: inherit
 
 settings:
